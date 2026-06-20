@@ -21,6 +21,7 @@ export interface Translations {
   cartItems: string
 
   // Hero slides
+  heroLimitedLabel: string
   hero1Badge: string
   hero1Title: string
   hero1Subtitle: string
@@ -165,6 +166,7 @@ const ja: Translations = {
   subNavSpecial: "特集",
   cartItems: "0",
 
+  heroLimitedLabel: "限定",
   hero1Badge: "新発売",
   hero1Title: "UNIQLO FRISCO",
   hero1Subtitle: "2025 夏コレクション",
@@ -236,7 +238,7 @@ const ja: Translations = {
   promo3Eyebrow: "バックインストック",
   promo3Title: "センシュアルなデニム\nバレルレッグジーンズ",
 
-  footerNewsletter: "メールマガジン登録",
+  footerNewsletter: "メールマガジン��録",
   footerNewsletterDesc: "最新情報やキャンペーン情報をお届けします。",
   footerNewsletterPlaceholder: "メールアドレスを入力",
   footerNewsletterBtn: "登録する",
@@ -302,6 +304,7 @@ const en: Translations = {
   subNavSpecial: "Features",
   cartItems: "0",
 
+  heroLimitedLabel: "LIMITED",
   hero1Badge: "NEW",
   hero1Title: "UNIQLO FRISCO",
   hero1Subtitle: "Summer 2025 Collection",

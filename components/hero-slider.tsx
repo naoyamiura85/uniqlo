@@ -3,44 +3,47 @@
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 
 export default function HeroSlider() {
   const { t } = useLanguage()
   const [current, setCurrent] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [paused, setPaused] = useState(false)
 
   const slides = [
     {
       id: 1,
       image: "/images/hero-1.png",
-      badge: t.hero1Badge,
+      eyebrow: t.hero1Badge,
       title: t.hero1Title,
       subtitle: t.hero1Subtitle,
-      description: t.hero1Desc,
+      note: t.hero1Desc,
       cta: t.hero1Cta,
       ctaHref: "#",
+      textLight: true,   // 暗い画像には白文字
     },
     {
       id: 2,
       image: "/images/hero-2.png",
-      badge: t.hero2Badge,
+      eyebrow: t.hero2Badge,
       title: t.hero2Title,
       subtitle: t.hero2Subtitle,
-      description: t.hero2Desc,
+      note: t.hero2Desc,
       cta: t.hero2Cta,
       ctaHref: "#",
+      textLight: false,  // 明るい画像には黒文字
     },
     {
       id: 3,
       image: "/images/hero-3.png",
-      badge: t.hero3Badge,
+      eyebrow: t.hero3Badge,
       title: t.hero3Title,
       subtitle: t.hero3Subtitle,
-      description: t.hero3Desc,
+      note: t.hero3Desc,
       cta: t.hero3Cta,
       ctaHref: "#",
+      textLight: false,
     },
   ]
 
@@ -48,131 +51,168 @@ export default function HeroSlider() {
     if (isTransitioning) return
     setIsTransitioning(true)
     setCurrent(index)
-    setTimeout(() => setIsTransitioning(false), 400)
+    setTimeout(() => setIsTransitioning(false), 600)
   }, [isTransitioning])
 
-  const prev = () => goTo((current - 1 + slides.length) % slides.length)
   const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo, slides.length])
+  const prev = () => goTo((current - 1 + slides.length) % slides.length)
 
   useEffect(() => {
-    const timer = setInterval(next, 5000)
+    if (paused) return
+    const timer = setInterval(next, 6000)
     return () => clearInterval(timer)
-  }, [next])
+  }, [next, paused])
 
   const slide = slides[current]
+  const textColor = slide.textLight ? "#FFFFFF" : "#FFFFFF"
+  const subTextColor = slide.textLight ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.85)"
 
   return (
     <div
       className="relative w-full overflow-hidden"
-      style={{ aspectRatio: "16/7", backgroundColor: "#F5F5F5" }}
+      style={{ height: "calc(100svh - 56px)", minHeight: 480, maxHeight: 900, backgroundColor: "#1a1a1a" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       {/* Slides */}
       {slides.map((s, i) => (
         <div
           key={s.id}
-          className="absolute inset-0 transition-opacity duration-500"
+          className="absolute inset-0 transition-opacity duration-700"
           style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? "auto" : "none" }}
+          aria-hidden={i !== current}
         >
           <Image
             src={s.image}
             alt={s.title}
             fill
-            className="object-cover"
-            style={{ objectPosition: "center 20%" }}
+            className="object-cover object-center"
             priority={i === 0}
+            sizes="100vw"
+          />
+          {/* Gradient overlay: bottom to transparent for text legibility */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to top, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.2) 45%, transparent 75%)",
+            }}
           />
         </div>
       ))}
 
-      {/* Text panel — bottom-left, white bg */}
-      <div className="absolute bottom-8 left-0 right-0">
-        <div className="max-w-[1280px] mx-auto px-6 md:px-12">
-          <div
-            className="inline-block px-6 py-5 max-w-xs transition-all duration-500"
+      {/* Text — bottom-left, directly on image (実際のUniqloサイトと同じスタイル) */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pb-12 px-6 md:px-10 transition-all duration-500"
+        style={{
+          opacity: isTransitioning ? 0 : 1,
+          transform: isTransitioning ? "translateY(8px)" : "translateY(0)",
+        }}
+      >
+        {/* Eyebrow — small label with icon, like "F.RISSO 限定" */}
+        <div className="flex items-center gap-2 mb-2">
+          <span
+            className="font-medium tracking-widest"
+            style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", letterSpacing: "0.15em" }}
+          >
+            {slide.eyebrow}
+          </span>
+          <span
+            className="inline-flex items-center px-1.5 py-0.5"
             style={{
-              opacity: isTransitioning ? 0 : 1,
-              transform: isTransitioning ? "translateY(6px)" : "translateY(0)",
-              backgroundColor: "rgba(255,255,255,0.92)",
+              fontSize: 9,
+              backgroundColor: "rgba(255,255,255,0.2)",
+              border: "1px solid rgba(255,255,255,0.4)",
+              color: "rgba(255,255,255,0.9)",
+              letterSpacing: "0.1em",
             }}
           >
-            <div
-              className="inline-block px-2 py-0.5 mb-2 text-white font-medium tracking-widest"
-              style={{ backgroundColor: "var(--uniqlo-red)", fontSize: 10 }}
-            >
-              {slide.badge}
-            </div>
-            <h1
-              className="font-bold leading-tight mb-1"
-              style={{ fontSize: "clamp(18px, 2vw, 26px)", color: "#222222" }}
-            >
-              {slide.title}
-            </h1>
-            <p
-              className="font-medium mb-2"
-              style={{ fontSize: "clamp(12px, 1.4vw, 16px)", color: "#222222" }}
-            >
-              {slide.subtitle}
-            </p>
-            <p
-              className="mb-4 whitespace-pre-line leading-relaxed"
-              style={{ fontSize: "clamp(10px, 1vw, 12px)", color: "#767676" }}
-            >
-              {slide.description}
-            </p>
-            <Link
-              href={slide.ctaHref}
-              className="inline-flex items-center gap-2 text-white px-5 py-2 text-xs font-medium tracking-wider transition-colors hover:opacity-90"
-              style={{ backgroundColor: "#222222" }}
-            >
-              {slide.cta}
-            </Link>
-          </div>
+            {t.heroLimitedLabel}
+          </span>
         </div>
+
+        {/* Main title — large, bold, white */}
+        <h1
+          className="font-bold leading-tight mb-1.5"
+          style={{
+            fontSize: "clamp(26px, 4vw, 52px)",
+            color: textColor,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.15,
+          }}
+        >
+          {slide.title}
+          {slide.subtitle && (
+            <>
+              <br />
+              {slide.subtitle}
+            </>
+          )}
+        </h1>
+
+        {/* Note text */}
+        <p
+          className="mb-5 leading-relaxed"
+          style={{
+            fontSize: "clamp(12px, 1.3vw, 15px)",
+            color: subTextColor,
+            maxWidth: 360,
+          }}
+        >
+          {slide.note}
+        </p>
+
+        {/* CTA + small legal disclaimer, like real Uniqlo site */}
+        <Link
+          href={slide.ctaHref}
+          className="inline-flex items-center gap-2 px-6 py-2.5 font-medium tracking-wider transition-opacity hover:opacity-80"
+          style={{
+            fontSize: 12,
+            backgroundColor: "rgba(255,255,255,0.95)",
+            color: "#222222",
+            letterSpacing: "0.1em",
+          }}
+        >
+          {slide.cta}
+        </Link>
       </div>
 
-      {/* Prev/Next arrows */}
-      <button
-        onClick={prev}
-        className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 transition-colors"
-        style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
-        aria-label="Previous slide"
+      {/* Slide indicators — dots, bottom right */}
+      <div
+        className="absolute bottom-5 right-6 flex items-center gap-2"
       >
-        <ChevronLeft size={18} style={{ color: "#222222" }} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 transition-colors"
-        style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
-        aria-label="Next slide"
-      >
-        <ChevronRight size={18} style={{ color: "#222222" }} />
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className="transition-all duration-300"
+            aria-label={`スライド ${i + 1}`}
             style={{
-              width: i === current ? 20 : 6,
-              height: 6,
-              borderRadius: 3,
-              backgroundColor: i === current ? "var(--uniqlo-red)" : "rgba(255,255,255,0.6)",
+              width: i === current ? 24 : 8,
+              height: 3,
+              borderRadius: 1.5,
+              transition: "width 0.3s, background-color 0.3s",
+              backgroundColor: i === current ? "#FFFFFF" : "rgba(255,255,255,0.4)",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
             }}
-            aria-label={`Slide ${i + 1}`}
           />
         ))}
+        <span
+          style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginLeft: 6 }}
+        >
+          {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+        </span>
       </div>
 
-      {/* Slide counter */}
-      <div
-        className="absolute bottom-3 right-4"
-        style={{ fontSize: 11, color: "rgba(255,255,255,0.85)" }}
+      {/* Pause indicator (circle like real site) */}
+      <button
+        onClick={() => setPaused(!paused)}
+        className="absolute bottom-4 right-4 md:hidden"
+        style={{ color: "rgba(255,255,255,0.5)", fontSize: 18 }}
+        aria-label={paused ? "再生" : "一時停止"}
       >
-        {current + 1} / {slides.length}
-      </div>
+        {paused ? "▶" : "⏸"}
+      </button>
     </div>
   )
 }
