@@ -8,22 +8,12 @@ export default function CategoryGrid() {
   const { t } = useLanguage()
 
   const categories = [
-    { label: t.catTshirt, image: "/images/cat-tshirt.png", href: "#" },
-    { label: t.catTops, image: "/images/cat-knitwear.png", href: "#" },
-    { label: t.catShirts, image: "/images/cat-shirt.png", href: "#" },
-    { label: t.catPants, image: "/images/cat-pants.png", href: "#" },
-    { label: t.catShorts, image: "/images/cat-shorts.png", href: "#" },
-    { label: t.catDress, image: "/images/cat-dress.png", href: "#" },
-    { label: t.catOuter, image: "/images/cat-outer.png", href: "#" },
-    { label: t.catInnerwear, image: "/images/cat-innerwear.png", href: "#" },
-    { label: t.catKnitwear, image: "/images/cat-knitwear.png", href: "#" },
-    { label: t.catDenim, image: "/images/cat-denim.png", href: "#" },
-    { label: t.catSports, image: "/images/cat-sport.png", href: "#" },
-    { label: t.catAirizm, image: "/images/cat-innerwear.png", href: "#" },
-    { label: t.catHeattech, image: "/images/cat-knitwear.png", href: "#" },
-    { label: t.catLimited, image: "/images/cat-dress.png", href: "#" },
-    { label: t.catUT, image: "/images/cat-tshirt.png", href: "#" },
-    { label: t.catTech, image: "/images/cat-sport.png", href: "#" },
+    { label: "AIRism",             image: "/images/cat-icon-airism.png",     href: "#", bg: "#FFFFFF" },
+    { label: "UV Protection",      image: "/images/cat-icon-uvprotection.png", href: "#", bg: "#FFFFFF" },
+    { label: "UT",                 image: "/images/cat-icon-ut.png",         href: "#", bg: "#FFFFFF" },
+    { label: "GU",                 image: "/images/cat-icon-gu.png",         href: "#", bg: "#FFFFFF" },
+    { label: "Linen",              image: "/images/cat-icon-linen.png",      href: "#", bg: "#FFFFFF" },
+    { label: "Sport Utility Wear", image: "/images/cat-icon-sportuware.png", href: "#", bg: "#FFFFFF" },
   ]
 
   return (
@@ -31,27 +21,27 @@ export default function CategoryGrid() {
       <h2 className="font-bold mb-5 tracking-wide" style={{ fontSize: 15, color: "#222222" }}>
         {t.categoryTitle}
       </h2>
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {categories.map((cat) => (
           <Link
             key={cat.label}
             href={cat.href}
-            className="flex flex-col items-center gap-1.5 group"
+            className="flex flex-col items-center gap-2 group"
           >
             <div
               className="w-full aspect-square overflow-hidden relative"
-              style={{ backgroundColor: "#F5F5F5" }}
+              style={{ backgroundColor: cat.bg, border: "1px solid #E8E8E8" }}
             >
               <Image
                 src={cat.image}
                 alt={cat.label}
                 fill
-                className="object-cover transition-opacity duration-200 group-hover:opacity-80"
+                className="object-contain p-3 transition-opacity duration-200 group-hover:opacity-75"
               />
             </div>
             <span
               className="text-center leading-tight text-balance"
-              style={{ fontSize: 10, color: "#222222" }}
+              style={{ fontSize: 11, color: "#222222" }}
             >
               {cat.label}
             </span>
