@@ -4,106 +4,195 @@ import Link from "next/link"
 import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
 
+type BannerItem = {
+  id: number
+  image: string
+  badge?: string
+  badgeImg?: string
+  title: string
+  subtitle?: string
+  desc?: string
+  price?: string
+  priceOld?: string
+  promo?: string
+  cta: string
+  href: string
+  textColor?: "white" | "dark"
+  overlayStrength?: number
+}
+
 export default function FeatureBanner() {
   const { lang, t } = useLanguage()
 
-  const features = [
+  const banners: BannerItem[] = [
     {
       id: 1,
-      image: "/images/feature-airizm.png",
-      badge: t.feat1Badge,
-      title: t.feat1Title,
-      desc: t.feat1Desc,
-      price: lang === "ja" ? "¥1,990" : "$29.90",
-      cta: t.feat1Cta,
-      href: "/products/airizm-dress",
+      image: "/images/banner-ut.png",
+      badgeImg: "/images/cat-icon-ut.png",
+      title: lang === "ja" ? "Just Arrived: ポケモン\nUT グラフィックTシャツ" : "Just Arrived: Pokémon\nUT Graphic Tees Collection",
+      desc: lang === "ja"
+        ? "コレクター必見のポケモンコラボUT"
+        : "The collection all Pokémon fans have been waiting for.",
+      cta: lang === "ja" ? "コレクションを見る" : "Shop the Collection",
+      href: "/products/crew-neck-tshirt",
+      textColor: "dark",
+      overlayStrength: 0,
     },
     {
       id: 2,
-      image: "/images/feature-linen.png",
-      badge: t.feat2Badge,
-      title: t.feat2Title,
-      desc: t.feat2Desc,
-      price: lang === "ja" ? "¥3,990" : "$39.90",
-      cta: t.feat2Cta,
+      image: "/images/banner-frisso.png",
+      title: lang === "ja" ? "Just Arrived: UNIQLO F.RISSO\nサマーカプセルコレクション" : "Just Arrived: UNIQLO F.RISSO\nSummer Capsule Collection",
+      desc: lang === "ja"
+        ? "フランチェスコ・リッソとユニクロのコラボレーション"
+        : "A summer capsule collection that weaves dreams into everyday clothing.",
+      cta: lang === "ja" ? "コレクションを見る" : "Shop the Collection",
+      href: "#",
+      textColor: "white",
+      overlayStrength: 0.35,
+    },
+    {
+      id: 3,
+      image: "/images/banner-airism-polo.png",
+      title: lang === "ja" ? "エアリズムコットン\nポロシャツ" : "AIRism Cotton\nPiqué Polo Shirt",
+      desc: lang === "ja"
+        ? "なめらかな速乾コンフォートとソフトコットンを融合したクラシックポロ"
+        : "Blending smooth, quick-drying comfort features with soft cotton in a classic polo design.",
+      price: lang === "ja" ? "¥1,990" : "$19.90",
+      priceOld: lang === "ja" ? "¥2,990" : "$29.90",
+      promo: lang === "ja" ? "オンライン・アプリ限定 6/25まで" : "Online + App Only Offer until 6/25",
+      cta: lang === "ja" ? "今すぐ購入" : "Shop Now",
+      href: "/products/crew-neck-tshirt",
+      textColor: "white",
+      overlayStrength: 0.25,
+    },
+    {
+      id: 4,
+      image: "/images/banner-linen.png",
+      title: lang === "ja" ? "100% プレミアムリネン" : "100% Premium Linen",
+      desc: lang === "ja"
+        ? "Tシャツに重ねてもそのまま着てもサマになる、通気性抜群の天然リネン"
+        : "Breathable, natural linen that layers over tees or styles by itself.",
+      cta: lang === "ja" ? "コレクションを見る" : "Shop the Collection",
       href: "/products/linen-pants",
+      textColor: "white",
+      overlayStrength: 0.2,
     },
   ]
 
   return (
-    <section className="py-4" style={{ backgroundColor: "#FFFFFF" }}>
-      <div className="flex flex-col gap-0">
-        {features.map((feature, idx) => (
-          <div
-            key={feature.id}
-            className={`flex ${idx % 2 === 0 ? "flex-row" : "flex-row-reverse"} min-h-[300px] md:min-h-[400px]`}
-          >
-            {/* Image */}
-            <div className="relative w-1/2 md:w-3/5">
-              <Image
-                src={feature.image}
-                alt={feature.title}
-                fill
-                className="object-cover"
-              />
-            </div>
+    <section style={{ backgroundColor: "#F5F5F5" }}>
+      {banners.map((banner) => (
+        <Link
+          key={banner.id}
+          href={banner.href}
+          className="relative block w-full overflow-hidden group"
+          style={{ aspectRatio: "16/7" }}
+        >
+          {/* Full-bleed image */}
+          <Image
+            src={banner.image}
+            alt={banner.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+            style={{ objectPosition: "center 30%" }}
+          />
 
-            {/* Text */}
+          {/* Dark overlay */}
+          {(banner.overlayStrength ?? 0) > 0 && (
             <div
-              className="w-1/2 md:w-2/5 flex flex-col justify-center px-6 md:px-12 py-8"
-              style={{ backgroundColor: "#FFFFFF" }}
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(to top, rgba(0,0,0,${banner.overlayStrength! + 0.3}) 0%, rgba(0,0,0,${banner.overlayStrength}) 50%, transparent 100%)`,
+              }}
+            />
+          )}
+
+          {/* Text block — bottom-left, matching hero-slider style */}
+          <div className="absolute bottom-0 left-0 right-0 px-8 pb-8 md:px-14 md:pb-12">
+            <div
+              className="transition-all duration-500"
+              style={{ maxWidth: 480 }}
             >
-              <div
-                className="font-medium mb-2 tracking-wide"
-                style={{ fontSize: 11, color: "var(--uniqlo-red)" }}
+              {/* Badge image */}
+              {banner.badgeImg && (
+                <div className="mb-3">
+                  <Image
+                    src={banner.badgeImg}
+                    alt=""
+                    width={80}
+                    height={28}
+                    style={{ height: 28, width: "auto" }}
+                  />
+                </div>
+              )}
+
+              <h2
+                className="font-bold leading-tight whitespace-pre-line mb-2"
+                style={{
+                  fontSize: "clamp(20px, 2.8vw, 40px)",
+                  color: banner.textColor === "white" ? "#FFFFFF" : "#111111",
+                  textShadow: banner.textColor === "white" ? "0 1px 4px rgba(0,0,0,0.3)" : "none",
+                }}
               >
-                {feature.badge}
-              </div>
-              <h3
-                className="font-bold leading-tight mb-3 whitespace-pre-line text-balance"
-                style={{ fontSize: "clamp(16px, 2vw, 26px)", color: "#222222" }}
-              >
-                {feature.title}
-              </h3>
-              <p
-                className="mb-4 whitespace-pre-line leading-relaxed"
-                style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#767676" }}
-              >
-                {feature.desc}
-              </p>
-              <div className="mb-1">
-                <span
-                  className="font-bold"
-                  style={{ fontSize: "clamp(20px, 2.5vw, 32px)", color: "var(--uniqlo-price-red)" }}
+                {banner.title}
+              </h2>
+
+              {banner.desc && (
+                <p
+                  className="mb-3 leading-relaxed"
+                  style={{
+                    fontSize: "clamp(12px, 1.2vw, 14px)",
+                    color: banner.textColor === "white" ? "rgba(255,255,255,0.85)" : "#444444",
+                  }}
                 >
-                  {feature.price}
+                  {banner.desc}
+                </p>
+              )}
+
+              {banner.price && (
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span
+                    className="font-bold"
+                    style={{ fontSize: "clamp(22px, 2.5vw, 34px)", color: "#E60012" }}
+                  >
+                    {banner.price}
+                  </span>
+                  {banner.priceOld && (
+                    <span
+                      className="line-through"
+                      style={{ fontSize: "clamp(12px, 1.2vw, 16px)", color: "rgba(255,255,255,0.7)" }}
+                    >
+                      {banner.priceOld}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {banner.promo && (
+                <p
+                  className="mb-4"
+                  style={{ fontSize: "clamp(10px, 1vw, 12px)", color: "#E60012" }}
+                >
+                  {banner.promo}
+                </p>
+              )}
+
+              <div className="mt-4">
+                <span
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium tracking-wider"
+                  style={{
+                    backgroundColor: banner.textColor === "white" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)",
+                    border: `1px solid ${banner.textColor === "white" ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.3)"}`,
+                    color: banner.textColor === "white" ? "#FFFFFF" : "#111111",
+                  }}
+                >
+                  {banner.cta}
                 </span>
-                {lang === "ja" && (
-                  <span className="ml-1" style={{ fontSize: 11, color: "#767676" }}>（税込）</span>
-                )}
               </div>
-              <p className="mb-5" style={{ fontSize: 11, color: "#767676" }}>
-                {t.productPriceChange}
-              </p>
-              <Link
-                href={feature.href}
-                className="inline-flex items-center gap-2 px-6 py-2 text-xs font-medium tracking-wider transition-colors w-fit hover:text-white"
-                style={{ border: "1px solid #222222", color: "#222222" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#222222"
-                  e.currentTarget.style.color = "#FFFFFF"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent"
-                  e.currentTarget.style.color = "#222222"
-                }}
-              >
-                {feature.cta}
-              </Link>
             </div>
           </div>
-        ))}
-      </div>
+        </Link>
+      ))}
     </section>
   )
 }

@@ -3,7 +3,6 @@ import HeroSlider from "@/components/hero-slider"
 import CategoryGrid from "@/components/category-grid"
 import ProductSection from "@/components/product-section"
 import FeatureBanner from "@/components/feature-banner"
-import PromoSection from "@/components/promo-section"
 import Footer from "@/components/footer"
 
 export default function Home() {
@@ -12,24 +11,17 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
-        {/* ヒーロースライダー */}
+        {/* ヒーロースライダー — 100svh, ヘッダー透過でオーバーレイ */}
         <HeroSlider />
 
-        {/* カテゴリグリッド */}
+        {/* Shop by Category */}
         <CategoryGrid />
 
-        <div className="h-px bg-[var(--uniqlo-border)] mx-4" />
-
-        {/* 注目アイテム商品一覧 */}
+        {/* 注目アイテム */}
         <ProductSection />
 
-        <div className="h-px bg-[var(--uniqlo-border)] mx-4" />
-
-        {/* フィーチャーバナー（エアリズム・リネン） */}
+        {/* フルスクリーンバナー群（UT / F.RISSO / AIRism Polo / Linen） */}
         <FeatureBanner />
-
-        {/* プロモグリッド */}
-        <PromoSection />
       </main>
 
       <Footer />
