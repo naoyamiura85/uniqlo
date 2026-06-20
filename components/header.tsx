@@ -2,62 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Search, User, ShoppingBag, Heart, Menu, X, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-
-/** ユニクロ公式と同じ 2枚並びロゴ（左: ユニクロ, 右: UNIQLO） */
-function UniqloLogo() {
-  return (
-    <svg
-      viewBox="0 0 116 54"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="UNIQLO"
-      style={{ height: 36, width: "auto" }}
-    >
-      {/* Left square — katakana ユニクロ */}
-      <rect x="0" y="0" width="54" height="54" fill="#E60012" />
-      {/* ユ */}
-      <path d="M10 10 h10 M15 10 v8 M9 18 q6 4 12 0" stroke="white" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      {/* ニ */}
-      <line x1="10" y1="27" x2="26" y2="27" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-      <line x1="12" y1="22" x2="24" y2="22" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-      {/* ク */}
-      <path d="M10 35 q8-2 10 2 M14 33 v8" stroke="white" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      {/* ロ */}
-      <rect x="21" y="34" width="13" height="10" rx="1" stroke="white" strokeWidth="2.2" fill="none" />
-      <line x1="21" y1="39" x2="34" y2="39" stroke="white" strokeWidth="2.2" />
-
-      {/* Right square — UNIQLO */}
-      <rect x="62" y="0" width="54" height="54" fill="#E60012" />
-      <text
-        x="89"
-        y="22"
-        fontFamily="Arial Black, Arial, sans-serif"
-        fontSize="13"
-        fontWeight="900"
-        fill="white"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        letterSpacing="1"
-      >
-        UNI
-      </text>
-      <text
-        x="89"
-        y="40"
-        fontFamily="Arial Black, Arial, sans-serif"
-        fontSize="13"
-        fontWeight="900"
-        fill="white"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        letterSpacing="1"
-      >
-        QLO
-      </text>
-    </svg>
-  )
-}
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage()
@@ -93,7 +40,14 @@ export default function Header() {
 
         {/* Logo */}
         <Link href="/" className="shrink-0 flex items-center" aria-label="UNIQLO ホーム">
-          <UniqloLogo />
+          <Image
+            src="/images/logo-uniqlo.png"
+            alt="UNIQLO"
+            width={88}
+            height={40}
+            style={{ height: 40, width: "auto" }}
+            priority
+          />
         </Link>
 
         {/* Desktop main nav */}
