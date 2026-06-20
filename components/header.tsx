@@ -12,54 +12,54 @@ export default function Header() {
   const [searchValue, setSearchValue] = useState("")
 
   const mainNavItems = [
-    { label: t.navWomen, href: "#", active: false },
-    { label: t.navMen,   href: "#", active: true },
-    { label: t.navKids,  href: "#", active: false },
-    { label: t.navBaby,  href: "#", active: false },
+    { label: "WOMEN", href: "#", active: false },
+    { label: "MEN",   href: "#", active: true },
+    { label: "KIDS",  href: "#", active: false },
+    { label: "BABY",  href: "#", active: false },
   ]
 
   return (
     <header
-      className="sticky top-0 z-50 bg-white"
-      style={{ borderBottom: "1px solid #E8E8E8" }}
+      className="fixed top-0 left-0 right-0 z-50"
+      style={{ backgroundColor: "transparent" }}
     >
       {/* ── Desktop header ── */}
-      <div className="hidden md:flex items-center h-16 px-6 gap-0">
+      <div className="hidden md:flex items-center h-14 px-6 gap-0">
 
         {/* Logo */}
         <Link href="/" className="shrink-0 flex items-center" aria-label="UNIQLO ホーム">
           <Image
             src="/images/logo-uniqlo.png"
             alt="UNIQLO"
-            width={88}
-            height={40}
-            style={{ height: 40, width: "auto" }}
+            width={80}
+            height={36}
+            style={{ height: 36, width: "auto" }}
             priority
           />
         </Link>
 
-        {/* Nav — left-aligned, generous gap from logo */}
+        {/* Nav — always English labels, white text */}
         <nav
           className="flex items-center h-full ml-8"
-          aria-label="メインナビゲーション"
+          aria-label="Main navigation"
         >
           {mainNavItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="relative flex items-center h-full px-5 transition-opacity hover:opacity-60"
+              className="relative flex items-center h-full px-5 transition-opacity hover:opacity-70"
               style={{
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: 500,
-                color: "#222222",
-                letterSpacing: "0.01em",
+                color: "#FFFFFF",
+                letterSpacing: "0.02em",
               }}
             >
               {item.label}
               {item.active && (
                 <span
                   className="absolute bottom-0 left-5 right-5"
-                  style={{ height: 2, backgroundColor: "#222222" }}
+                  style={{ height: 2, backgroundColor: "#FFFFFF" }}
                 />
               )}
             </Link>
@@ -69,76 +69,76 @@ export default function Header() {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Search bar — wide pill, right section */}
-        <div style={{ width: 520 }}>
+        {/* Search bar — narrower pill */}
+        <div style={{ width: 320 }}>
           <label
-            className="flex items-center gap-2 w-full px-4 py-2.5 rounded-full cursor-text"
-            style={{ border: "1px solid #CCCCCC", backgroundColor: "#FFFFFF" }}
+            className="flex items-center gap-2 w-full px-4 py-2 rounded-full cursor-text"
+            style={{ border: "1px solid rgba(255,255,255,0.5)", backgroundColor: "rgba(255,255,255,0.15)" }}
           >
-            <Search size={15} style={{ color: "#767676", flexShrink: 0 }} />
+            <Search size={14} style={{ color: "#FFFFFF", flexShrink: 0 }} />
             <input
               type="text"
               placeholder={t.searchPlaceholder}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="outline-none flex-1 bg-transparent"
-              style={{ fontSize: 14, color: "#222222" }}
+              className="outline-none flex-1 bg-transparent placeholder:text-white/60"
+              style={{ fontSize: 13, color: "#FFFFFF" }}
             />
           </label>
         </div>
 
-        {/* Icon group */}
-        <div className="flex items-center ml-4 gap-1">
+        {/* Icon group — white */}
+        <div className="flex items-center ml-3 gap-0.5">
           <button
-            className="p-2 transition-opacity hover:opacity-50"
+            className="p-2 transition-opacity hover:opacity-60"
             aria-label={t.addToFavorite}
-            style={{ color: "#222222" }}
+            style={{ color: "#FFFFFF" }}
           >
-            <Heart size={22} />
+            <Heart size={20} />
           </button>
           <button
-            className="p-2 transition-opacity hover:opacity-50"
-            aria-label="アカウント"
-            style={{ color: "#222222" }}
+            className="p-2 transition-opacity hover:opacity-60"
+            aria-label="Account"
+            style={{ color: "#FFFFFF" }}
           >
-            <User size={22} />
+            <User size={20} />
           </button>
           <button
-            className="p-2 transition-opacity hover:opacity-50"
-            aria-label="カート"
-            style={{ color: "#222222" }}
+            className="p-2 transition-opacity hover:opacity-60"
+            aria-label="Cart"
+            style={{ color: "#FFFFFF" }}
           >
-            <ShoppingBag size={22} />
+            <ShoppingBag size={20} />
           </button>
           <button
-            className="p-2 transition-opacity hover:opacity-50"
-            aria-label="メニュー"
-            style={{ color: "#222222" }}
+            className="p-2 transition-opacity hover:opacity-60"
+            aria-label="Menu"
+            style={{ color: "#FFFFFF" }}
           >
-            <Menu size={22} />
+            <Menu size={20} />
           </button>
 
-          {/* Language toggle */}
-          <div className="flex items-center ml-2 gap-0.5">
+          {/* Language toggle — white */}
+          <div className="flex items-center ml-1 gap-0.5">
             <button
               onClick={() => setLang("ja")}
-              className="px-1.5 py-1 transition-colors"
+              className="px-1.5 py-1 transition-opacity hover:opacity-70"
               style={{
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: lang === "ja" ? 700 : 400,
-                color: lang === "ja" ? "#222222" : "#AAAAAA",
+                color: lang === "ja" ? "#FFFFFF" : "rgba(255,255,255,0.5)",
               }}
             >
               JP
             </button>
-            <span style={{ color: "#CCCCCC", fontSize: 12 }}>|</span>
+            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>|</span>
             <button
               onClick={() => setLang("en")}
-              className="px-1.5 py-1 transition-colors"
+              className="px-1.5 py-1 transition-opacity hover:opacity-70"
               style={{
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: lang === "en" ? 700 : 400,
-                color: lang === "en" ? "#222222" : "#AAAAAA",
+                color: lang === "en" ? "#FFFFFF" : "rgba(255,255,255,0.5)",
               }}
             >
               EN
@@ -148,32 +148,32 @@ export default function Header() {
       </div>
 
       {/* ── Mobile header ── */}
-      <div className="md:hidden flex items-center h-14 px-4 gap-3">
+      <div className="md:hidden flex items-center h-12 px-4 gap-3">
         <Link href="/" aria-label="UNIQLO ホーム">
           <Image
             src="/images/logo-uniqlo.png"
             alt="UNIQLO"
-            width={70}
-            height={32}
-            style={{ height: 32, width: "auto" }}
+            width={64}
+            height={28}
+            style={{ height: 28, width: "auto" }}
             priority
           />
         </Link>
         <div className="flex-1" />
-        <button className="p-2" aria-label="検索" style={{ color: "#222222" }}>
+        <button className="p-2" aria-label="Search" style={{ color: "#FFFFFF" }}>
           <Search size={20} />
         </button>
-        <button className="p-2" aria-label={t.addToFavorite} style={{ color: "#222222" }}>
+        <button className="p-2" aria-label={t.addToFavorite} style={{ color: "#FFFFFF" }}>
           <Heart size={20} />
         </button>
-        <button className="p-2" aria-label="カート" style={{ color: "#222222" }}>
+        <button className="p-2" aria-label="Cart" style={{ color: "#FFFFFF" }}>
           <ShoppingBag size={20} />
         </button>
         <button
           className="p-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="メニュー"
-          style={{ color: "#222222" }}
+          aria-label="Menu"
+          style={{ color: "#FFFFFF" }}
         >
           {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -183,7 +183,7 @@ export default function Header() {
       {mobileMenuOpen && (
         <div
           className="md:hidden border-t"
-          style={{ backgroundColor: "#FFFFFF", borderColor: "#E8E8E8" }}
+          style={{ backgroundColor: "#FFFFFF", borderColor: "rgba(255,255,255,0.2)" }}
         >
           {/* Search */}
           <div className="px-4 pt-3 pb-2">
