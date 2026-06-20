@@ -119,28 +119,15 @@ export default function HeroSlider() {
           transition: "opacity 0.5s, transform 0.5s",
         }}
       >
-        {/* Brand badge — small white box like "UNIQLO U" badge on actual site */}
-        <div className="flex items-center gap-2 mb-3">
-          <div
-            className="flex items-center gap-1 px-2 py-1"
-            style={{ backgroundColor: "#FFFFFF" }}
-          >
-            {/* Mini UNIQLO logo mark (two tiny red squares) */}
-            <span
-              style={{
-                display: "inline-flex",
-                gap: 1,
-              }}
-            >
-              <span style={{ width: 11, height: 11, backgroundColor: "#E60012", display: "block" }} />
-              <span style={{ width: 11, height: 11, backgroundColor: "#E60012", display: "block" }} />
-            </span>
-            <span
-              style={{ fontSize: 10, fontWeight: 700, color: "#222222", letterSpacing: "0.08em" }}
-            >
-              {slide.brand}
-            </span>
-          </div>
+        {/* Brand badge — provided PNG image */}
+        <div className="mb-3">
+          <Image
+            src="/images/badge-uniqlo-u.png"
+            alt="UNIQLO U"
+            width={120}
+            height={32}
+            style={{ height: 32, width: "auto" }}
+          />
         </div>
 
         {/* Product name — large white */}
