@@ -15,7 +15,7 @@ export default function HeroSlider() {
     {
       id: 1,
       image: "/images/hero-1.png",
-      // Badge: small brand label top-left of text block (like "UNIQLO U")
+      badge: "/images/badge-uniqlo-u-dark.png",
       brand: "UNIQLO U",
       // Product name
       title: lang === "ja" ? "クルーネックTシャツ" : "Crew Neck T-Shirt",
@@ -34,6 +34,7 @@ export default function HeroSlider() {
     {
       id: 2,
       image: "/images/hero-2.png",
+      badge: "/images/cat-icon-airism.png",
       brand: "AIRism",
       title: lang === "ja" ? "エアリズムコットン ワンピース" : "AIRism Cotton Dress",
       desc: lang === "ja"
@@ -47,6 +48,7 @@ export default function HeroSlider() {
     {
       id: 3,
       image: "/images/hero-3.png",
+      badge: "/images/cat-icon-linen.png",
       brand: lang === "ja" ? "リネンブレンド" : "LINEN BLEND",
       title: lang === "ja" ? "リネンブレンド イージーパンツ" : "Linen Blend Easy Pants",
       desc: lang === "ja"
@@ -119,16 +121,18 @@ export default function HeroSlider() {
           transition: "opacity 0.5s, transform 0.5s",
         }}
       >
-        {/* Brand badge — provided PNG image */}
-        <div className="mb-3">
-          <Image
-            src="/images/badge-uniqlo-u.png"
-            alt="UNIQLO U"
-            width={120}
-            height={32}
-            style={{ height: 32, width: "auto" }}
-          />
-        </div>
+        {/* Brand badge — per-slide image */}
+        {slide.badge && (
+          <div className="mb-3">
+            <Image
+              src={slide.badge}
+              alt={slide.brand}
+              width={120}
+              height={32}
+              style={{ height: 32, width: "auto" }}
+            />
+          </div>
+        )}
 
         {/* Product name — large white */}
         <h1
