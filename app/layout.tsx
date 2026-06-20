@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
+import { LanguageProvider } from '@/lib/language-context'
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
+  colorScheme: 'light only',
   themeColor: '#FF0000',
   width: 'device-width',
   initialScale: 1,
@@ -27,9 +28,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ja" className={`${notoSansJP.variable} bg-background`}>
-      <body className="font-sans antialiased">
-        {children}
+    <html lang="ja" className={`${notoSansJP.variable}`} style={{ backgroundColor: "#FFFFFF", colorScheme: "light" }}>
+      <body className="font-sans antialiased" style={{ backgroundColor: "#FFFFFF", color: "#222222" }}>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   )

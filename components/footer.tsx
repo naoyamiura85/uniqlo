@@ -1,64 +1,72 @@
+"use client"
+
 import Link from "next/link"
-
-const footerLinks = [
-  {
-    title: "お客様サポート",
-    links: [
-      { label: "よくあるご質問", href: "#" },
-      { label: "お問い合わせ", href: "#" },
-      { label: "交換・返品について", href: "#" },
-      { label: "サイズについて", href: "#" },
-      { label: "店舗を探す", href: "#" },
-    ],
-  },
-  {
-    title: "ショッピングガイド",
-    links: [
-      { label: "ご利用ガイド", href: "#" },
-      { label: "お支払い方法", href: "#" },
-      { label: "配送について", href: "#" },
-      { label: "特定商取引法に基づく表記", href: "#" },
-    ],
-  },
-  {
-    title: "会員サービス",
-    links: [
-      { label: "マイページ", href: "#" },
-      { label: "ポイントプログラム", href: "#" },
-      { label: "お気に入りリスト", href: "#" },
-      { label: "注文履歴", href: "#" },
-    ],
-  },
-  {
-    title: "企業情報",
-    links: [
-      { label: "会社概要", href: "#" },
-      { label: "サステナビリティ", href: "#" },
-      { label: "プレスリリース", href: "#" },
-      { label: "採用情報", href: "#" },
-    ],
-  },
-]
-
-const legalLinks = [
-  { label: "プライバシーポリシー", href: "#" },
-  { label: "利用規約", href: "#" },
-  { label: "特定商取引法", href: "#" },
-  { label: "アクセシビリティ", href: "#" },
-  { label: "サイトマップ", href: "#" },
-]
+import { useLanguage } from "@/lib/language-context"
 
 export default function Footer() {
+  const { t } = useLanguage()
+
+  const footerLinks = [
+    {
+      title: t.footerSupport,
+      links: [
+        { label: t.footerFAQ, href: "#" },
+        { label: t.footerContact, href: "#" },
+        { label: t.footerReturn, href: "#" },
+        { label: t.footerSize, href: "#" },
+        { label: t.footerStores, href: "#" },
+      ],
+    },
+    {
+      title: t.footerGuide,
+      links: [
+        { label: t.footerShoppingGuide, href: "#" },
+        { label: t.footerPayment, href: "#" },
+        { label: t.footerShipping, href: "#" },
+        { label: t.footerLaw, href: "#" },
+      ],
+    },
+    {
+      title: t.footerMember,
+      links: [
+        { label: t.footerMyPage, href: "#" },
+        { label: t.footerPoints, href: "#" },
+        { label: t.footerFavorites, href: "#" },
+        { label: t.footerOrders, href: "#" },
+      ],
+    },
+    {
+      title: t.footerCompany,
+      links: [
+        { label: t.footerAbout, href: "#" },
+        { label: t.footerSustain, href: "#" },
+        { label: t.footerPress, href: "#" },
+        { label: t.footerCareers, href: "#" },
+      ],
+    },
+  ]
+
+  const legalLinks = [
+    { label: t.footerPrivacy, href: "#" },
+    { label: t.footerTerms, href: "#" },
+    { label: t.footerLaw, href: "#" },
+    { label: t.footerAccessibility, href: "#" },
+    { label: t.footerSitemap, href: "#" },
+  ]
+
   return (
-    <footer className="bg-[var(--uniqlo-gray)] border-t border-[var(--uniqlo-border)] mt-8">
+    <footer
+      className="border-t mt-8"
+      style={{ backgroundColor: "#F5F5F5", borderColor: "var(--uniqlo-border)" }}
+    >
       {/* Main footer links */}
       <div className="max-w-[1280px] mx-auto px-4 py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {footerLinks.map((section) => (
             <div key={section.title}>
               <h3
-                className="font-bold text-[var(--uniqlo-text-dark)] mb-3 tracking-wide"
-                style={{ fontSize: 12 }}
+                className="font-bold mb-3 tracking-wide"
+                style={{ fontSize: 12, color: "#222222" }}
               >
                 {section.title}
               </h3>
@@ -67,8 +75,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[var(--uniqlo-text-gray)] hover:text-[var(--uniqlo-text-dark)] transition-colors"
-                      style={{ fontSize: 12 }}
+                      className="transition-colors hover:opacity-70"
+                      style={{ fontSize: 12, color: "#767676" }}
                     >
                       {link.label}
                     </Link>
@@ -81,28 +89,36 @@ export default function Footer() {
       </div>
 
       {/* Newsletter */}
-      <div className="border-t border-[var(--uniqlo-border)]">
+      <div className="border-t" style={{ borderColor: "var(--uniqlo-border)" }}>
         <div className="max-w-[1280px] mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div>
-              <h3 className="font-bold text-[var(--uniqlo-text-dark)] mb-1" style={{ fontSize: 13 }}>
-                メールマガジン登録
+              <h3 className="font-bold mb-1" style={{ fontSize: 13, color: "#222222" }}>
+                {t.footerNewsletter}
               </h3>
-              <p className="text-[var(--uniqlo-text-gray)]" style={{ fontSize: 12 }}>
-                最新情報やキャンペーン情報をお届けします。
+              <p style={{ fontSize: 12, color: "#767676" }}>
+                {t.footerNewsletterDesc}
               </p>
             </div>
             <div className="flex flex-1 max-w-md gap-0">
               <input
                 type="email"
-                placeholder="メールアドレスを入力"
-                className="flex-1 border border-[var(--uniqlo-border)] px-3 py-2 text-sm outline-none focus:border-[var(--uniqlo-text-dark)]"
-                style={{ fontSize: 13 }}
+                placeholder={t.footerNewsletterPlaceholder}
+                className="flex-1 px-3 py-2 outline-none"
+                style={{
+                  border: "1px solid var(--uniqlo-border)",
+                  fontSize: 13,
+                  backgroundColor: "#FFFFFF",
+                  color: "#222222",
+                }}
               />
               <button
-                className="bg-[var(--uniqlo-text-dark)] text-white px-5 py-2 text-xs font-medium tracking-wider hover:bg-[var(--uniqlo-red)] transition-colors"
+                className="text-white px-5 py-2 text-xs font-medium tracking-wider transition-colors"
+                style={{ backgroundColor: "#222222" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--uniqlo-red)" }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#222222" }}
               >
-                登録する
+                {t.footerNewsletterBtn}
               </button>
             </div>
           </div>
@@ -110,18 +126,18 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[var(--uniqlo-border)]">
+      <div className="border-t" style={{ borderColor: "var(--uniqlo-border)" }}>
         <div className="max-w-[1280px] mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
               <div
-                className="bg-[var(--uniqlo-red)] text-white font-bold flex items-center justify-center"
-                style={{ width: 24, height: 24, fontSize: 9 }}
+                className="text-white font-bold flex items-center justify-center"
+                style={{ width: 24, height: 24, fontSize: 9, backgroundColor: "var(--uniqlo-red)" }}
               >
                 UQ
               </div>
-              <span className="font-bold tracking-widest" style={{ fontSize: 11, letterSpacing: "0.2em" }}>
+              <span className="font-bold tracking-widest" style={{ fontSize: 11, letterSpacing: "0.2em", color: "#222222" }}>
                 UNIQLO
               </span>
             </div>
@@ -132,8 +148,8 @@ export default function Footer() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-[var(--uniqlo-text-gray)] hover:text-[var(--uniqlo-text-dark)] transition-colors"
-                  style={{ fontSize: 11 }}
+                  className="transition-colors hover:opacity-70"
+                  style={{ fontSize: 11, color: "#767676" }}
                 >
                   {link.label}
                 </Link>
@@ -141,8 +157,8 @@ export default function Footer() {
             </div>
 
             {/* Copyright */}
-            <p className="text-[var(--uniqlo-text-gray)]" style={{ fontSize: 11 }}>
-              © 2025 UNIQLO CO., LTD. All rights reserved.
+            <p style={{ fontSize: 11, color: "#767676" }}>
+              {t.footerCopyright}
             </p>
           </div>
         </div>

@@ -2,11 +2,12 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
+/* ダークモードを完全に無効化 — Uniqloは常にライトテーマ */
+@custom-variant dark (&:is(.never *));
 
 @theme inline {
   --font-sans: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback';
+  --font-mono: 'Geist Mono', monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -31,30 +32,34 @@
   --radius-lg: var(--radius);
 }
 
-:root {
+/* ライトテーマのみ — メディアクエリ dark は上書きしない */
+:root,
+:root.dark,
+[data-theme="dark"] {
   color-scheme: light;
+
   /* Uniqlo color palette: Red, Black, White, Light gray */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.1 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.1 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.1 0 0);
-  --primary: oklch(0.1 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.1 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.96 0 0);
-  --accent-foreground: oklch(0.1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.5 0 0);
+  --background: #FFFFFF;
+  --foreground: #222222;
+  --card: #FFFFFF;
+  --card-foreground: #222222;
+  --popover: #FFFFFF;
+  --popover-foreground: #222222;
+  --primary: #222222;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F5F5;
+  --secondary-foreground: #222222;
+  --muted: #F5F5F5;
+  --muted-foreground: #767676;
+  --accent: #F5F5F5;
+  --accent-foreground: #222222;
+  --destructive: #CC0000;
+  --border: #E0E0E0;
+  --input: #E0E0E0;
+  --ring: #767676;
   --radius: 0rem;
 
-  /* Uniqlo brand red */
+  /* Uniqlo brand tokens */
   --uniqlo-red: #FF0000;
   --uniqlo-dark-red: #CC0000;
   --uniqlo-price-red: #CC0000;
@@ -69,12 +74,15 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: #FFFFFF !important;
+    color: #222222 !important;
     font-size: 14px;
     line-height: 1.5;
   }
   html {
     @apply font-sans;
+    background-color: #FFFFFF !important;
+    color-scheme: light !important;
   }
 }
 
