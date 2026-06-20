@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
 
 export default function HeroSlider() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [current, setCurrent] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [paused, setPaused] = useState(false)
@@ -15,35 +15,47 @@ export default function HeroSlider() {
     {
       id: 1,
       image: "/images/hero-1.png",
-      eyebrow: t.hero1Badge,
-      title: t.hero1Title,
-      subtitle: t.hero1Subtitle,
-      note: t.hero1Desc,
-      cta: t.hero1Cta,
-      ctaHref: "#",
-      textLight: true,   // 暗い画像には白文字
+      // Badge: small brand label top-left of text block (like "UNIQLO U")
+      brand: "UNIQLO U",
+      // Product name
+      title: lang === "ja" ? "クルーネックTシャツ" : "Crew Neck T-Shirt",
+      // Short copy line
+      desc: lang === "ja"
+        ? "ベストセラーの100%コットン素材のTシャツ。"
+        : "Save now on this best-selling tee crafted with soft 100% cotton.",
+      // Sale price (red)
+      salePrice: lang === "ja" ? "¥1,990" : "$19.90",
+      // Original price (strikethrough)
+      origPrice: lang === "ja" ? "¥2,490" : "$24.90",
+      // Promo label (red, tiny)
+      promo: lang === "ja" ? "オンライン・アプリ限定 6/25まで" : "Online + App Only Offer until 6/25",
+      href: "/products/crew-neck-tshirt",
     },
     {
       id: 2,
       image: "/images/hero-2.png",
-      eyebrow: t.hero2Badge,
-      title: t.hero2Title,
-      subtitle: t.hero2Subtitle,
-      note: t.hero2Desc,
-      cta: t.hero2Cta,
-      ctaHref: "#",
-      textLight: false,  // 明るい画像には黒文字
+      brand: "AIRism",
+      title: lang === "ja" ? "エアリズムコットン ワンピース" : "AIRism Cotton Dress",
+      desc: lang === "ja"
+        ? "肌にやさしく、さらさら快適な夏の定番。"
+        : "Soft, smooth, and breathable. Your summer wardrobe essential.",
+      salePrice: lang === "ja" ? "¥3,990" : "$39.90",
+      origPrice: null,
+      promo: null,
+      href: "/products/airizm-dress",
     },
     {
       id: 3,
       image: "/images/hero-3.png",
-      eyebrow: t.hero3Badge,
-      title: t.hero3Title,
-      subtitle: t.hero3Subtitle,
-      note: t.hero3Desc,
-      cta: t.hero3Cta,
-      ctaHref: "#",
-      textLight: false,
+      brand: lang === "ja" ? "リネンブレンド" : "LINEN BLEND",
+      title: lang === "ja" ? "リネンブレンド イージーパンツ" : "Linen Blend Easy Pants",
+      desc: lang === "ja"
+        ? "天然素材のリネンをブレンドした夏の定番パンツ。"
+        : "Natural linen blend for a cool, relaxed summer look.",
+      salePrice: lang === "ja" ? "¥4,990" : "$49.90",
+      origPrice: null,
+      promo: null,
+      href: "/products/linen-pants",
     },
   ]
 
@@ -51,11 +63,10 @@ export default function HeroSlider() {
     if (isTransitioning) return
     setIsTransitioning(true)
     setCurrent(index)
-    setTimeout(() => setIsTransitioning(false), 600)
+    setTimeout(() => setIsTransitioning(false), 700)
   }, [isTransitioning])
 
   const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo, slides.length])
-  const prev = () => goTo((current - 1 + slides.length) % slides.length)
 
   useEffect(() => {
     if (paused) return
@@ -64,13 +75,11 @@ export default function HeroSlider() {
   }, [next, paused])
 
   const slide = slides[current]
-  const textColor = slide.textLight ? "#FFFFFF" : "#FFFFFF"
-  const subTextColor = slide.textLight ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.85)"
 
   return (
     <div
       className="relative w-full overflow-hidden"
-      style={{ height: "calc(100svh - 56px)", minHeight: 480, maxHeight: 900, backgroundColor: "#1a1a1a" }}
+      style={{ height: "100svh", backgroundColor: "#F0EFE9" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -86,133 +95,154 @@ export default function HeroSlider() {
             src={s.image}
             alt={s.title}
             fill
-            className="object-cover object-center"
+            className="object-cover"
+            style={{ objectPosition: "center top" }}
             priority={i === 0}
             sizes="100vw"
           />
-          {/* Gradient overlay: bottom to transparent for text legibility */}
+          {/* Subtle gradient only at the very bottom for text legibility */}
           <div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(to top, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.2) 45%, transparent 75%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 30%, transparent 55%)",
             }}
           />
         </div>
       ))}
 
-      {/* Text — bottom-left, directly on image (実際のUniqloサイトと同じスタイル) */}
+      {/* Text block — bottom-left, directly on image (matches real Uniqlo site) */}
       <div
-        className="absolute bottom-0 left-0 right-0 pb-12 px-6 md:px-10 transition-all duration-500"
+        className="absolute left-0 bottom-0 px-8 md:px-12 pb-16 md:pb-20"
         style={{
           opacity: isTransitioning ? 0 : 1,
-          transform: isTransitioning ? "translateY(8px)" : "translateY(0)",
+          transform: isTransitioning ? "translateY(6px)" : "translateY(0)",
+          transition: "opacity 0.5s, transform 0.5s",
         }}
       >
-        {/* Eyebrow — small label with icon, like "F.RISSO 限定" */}
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className="font-medium tracking-widest"
-            style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", letterSpacing: "0.15em" }}
+        {/* Brand badge — small white box like "UNIQLO U" badge on actual site */}
+        <div className="flex items-center gap-2 mb-3">
+          <div
+            className="flex items-center gap-1 px-2 py-1"
+            style={{ backgroundColor: "#FFFFFF" }}
           >
-            {slide.eyebrow}
-          </span>
-          <span
-            className="inline-flex items-center px-1.5 py-0.5"
-            style={{
-              fontSize: 9,
-              backgroundColor: "rgba(255,255,255,0.2)",
-              border: "1px solid rgba(255,255,255,0.4)",
-              color: "rgba(255,255,255,0.9)",
-              letterSpacing: "0.1em",
-            }}
-          >
-            {t.heroLimitedLabel}
-          </span>
+            {/* Mini UNIQLO logo mark (two tiny red squares) */}
+            <span
+              style={{
+                display: "inline-flex",
+                gap: 1,
+              }}
+            >
+              <span style={{ width: 11, height: 11, backgroundColor: "#E60012", display: "block" }} />
+              <span style={{ width: 11, height: 11, backgroundColor: "#E60012", display: "block" }} />
+            </span>
+            <span
+              style={{ fontSize: 10, fontWeight: 700, color: "#222222", letterSpacing: "0.08em" }}
+            >
+              {slide.brand}
+            </span>
+          </div>
         </div>
 
-        {/* Main title — large, bold, white */}
+        {/* Product name — large white */}
         <h1
-          className="font-bold leading-tight mb-1.5"
+          className="font-bold leading-tight mb-2"
           style={{
-            fontSize: "clamp(26px, 4vw, 52px)",
-            color: textColor,
+            fontSize: "clamp(22px, 3.5vw, 42px)",
+            color: "#FFFFFF",
             letterSpacing: "-0.01em",
-            lineHeight: 1.15,
+            lineHeight: 1.2,
+            maxWidth: 480,
           }}
         >
           {slide.title}
-          {slide.subtitle && (
-            <>
-              <br />
-              {slide.subtitle}
-            </>
-          )}
         </h1>
 
-        {/* Note text */}
+        {/* Description */}
         <p
-          className="mb-5 leading-relaxed"
+          className="mb-3 leading-relaxed"
           style={{
-            fontSize: "clamp(12px, 1.3vw, 15px)",
-            color: subTextColor,
-            maxWidth: 360,
+            fontSize: "clamp(12px, 1.2vw, 14px)",
+            color: "rgba(255,255,255,0.9)",
+            maxWidth: 380,
           }}
         >
-          {slide.note}
+          {slide.desc}
         </p>
 
-        {/* CTA + small legal disclaimer, like real Uniqlo site */}
-        <Link
-          href={slide.ctaHref}
-          className="inline-flex items-center gap-2 px-6 py-2.5 font-medium tracking-wider transition-opacity hover:opacity-80"
-          style={{
-            fontSize: 12,
-            backgroundColor: "rgba(255,255,255,0.95)",
-            color: "#222222",
-            letterSpacing: "0.1em",
-          }}
-        >
-          {slide.cta}
-        </Link>
+        {/* Price block */}
+        <div className="flex items-baseline gap-2 mb-1">
+          <span
+            style={{
+              fontSize: "clamp(18px, 2.2vw, 26px)",
+              fontWeight: 700,
+              color: "#E60012",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {slide.salePrice}
+          </span>
+          {slide.origPrice && (
+            <span
+              style={{
+                fontSize: "clamp(12px, 1.3vw, 15px)",
+                color: "rgba(255,255,255,0.6)",
+                textDecoration: "line-through",
+              }}
+            >
+              {slide.origPrice}
+            </span>
+          )}
+        </div>
+
+        {/* Promo text */}
+        {slide.promo && (
+          <p style={{ fontSize: 11, color: "#FF4444", fontWeight: 500, letterSpacing: "0.01em" }}>
+            {slide.promo}
+          </p>
+        )}
       </div>
 
-      {/* Slide indicators — dots, bottom right */}
-      <div
-        className="absolute bottom-5 right-6 flex items-center gap-2"
-      >
+      {/* Slide indicators + counter — bottom right */}
+      <div className="absolute bottom-6 right-6 flex items-center gap-2.5">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
             aria-label={`スライド ${i + 1}`}
             style={{
-              width: i === current ? 24 : 8,
+              width: i === current ? 20 : 7,
               height: 3,
-              borderRadius: 1.5,
-              transition: "width 0.3s, background-color 0.3s",
-              backgroundColor: i === current ? "#FFFFFF" : "rgba(255,255,255,0.4)",
+              borderRadius: 2,
+              transition: "width 0.3s ease, background-color 0.3s",
+              backgroundColor: i === current ? "#FFFFFF" : "rgba(255,255,255,0.35)",
               border: "none",
               padding: 0,
               cursor: "pointer",
             }}
           />
         ))}
-        <span
-          style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginLeft: 6 }}
+        {/* Pause / play circle icon — like real site */}
+        <button
+          onClick={() => setPaused(!paused)}
+          aria-label={paused ? "再生" : "一時停止"}
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: "50%",
+            border: "1.5px solid rgba(255,255,255,0.6)",
+            backgroundColor: "transparent",
+            color: "rgba(255,255,255,0.8)",
+            fontSize: 9,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginLeft: 2,
+          }}
         >
-          {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
-        </span>
+          {paused ? "▶" : "⏸"}
+        </button>
       </div>
-
-      {/* Pause indicator (circle like real site) */}
-      <button
-        onClick={() => setPaused(!paused)}
-        className="absolute bottom-4 right-4 md:hidden"
-        style={{ color: "rgba(255,255,255,0.5)", fontSize: 18 }}
-        aria-label={paused ? "再生" : "一時停止"}
-      >
-        {paused ? "▶" : "⏸"}
-      </button>
     </div>
   )
 }
