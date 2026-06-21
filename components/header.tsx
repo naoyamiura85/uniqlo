@@ -3,11 +3,21 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Search, User, ShoppingBag, Heart, Menu, X, ChevronRight } from "lucide-react"
+import { Search, User, ShoppingBag, Heart, Menu, X, ChevronRight, Sparkles, Headset, Ruler, Gift } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import { useAssistant } from "@/lib/assistant-context"
+import { scenarios, type AssistantIcon } from "@/lib/assistant-scenarios"
+
+const MODE_ICONS: Record<AssistantIcon, typeof Headset> = {
+  concierge: Headset,
+  styling: Sparkles,
+  ruler: Ruler,
+  gift: Gift,
+}
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage()
+  const { openWithMode } = useAssistant()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
@@ -263,6 +273,42 @@ export default function Header() {
             >
               English
             </button>
+          </div>
+
+          {/* AI 接客モード切替 */}
+          <div className="px-4 pt-3 pb-3 mt-1" style={{ borderTop: "1px solid #EEEEEE" }}>
+            <div className="flex items-center gap-1.5 mb-2">
+              <Sparkles size={14} style={{ color: "var(--uniqlo-red)" }} />
+              <p className="font-bold" style={{ fontSize: 12, color: "#222222" }}>
+                {lang === "ja" ? "AI接客モード" : "AI Assistant Mode"}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {scenarios.map((s) => {
+                const Icon = MODE_ICONS[s.icon]
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      openWithMode(s.id)
+                      setMobileMenuOpen(false)
+                    }}
+                    className="flex items-start gap-2 rounded-lg p-2.5 text-left transition-colors hover:bg-gray-50"
+                    style={{ border: "1px solid #E0E0E0" }}
+                  >
+                    <Icon size={16} style={{ color: "var(--uniqlo-red)", marginTop: 1, flexShrink: 0 }} />
+                    <span>
+                      <span className="block font-medium leading-tight" style={{ fontSize: 12, color: "#222222" }}>
+                        {lang === "ja" ? s.labelJa : s.labelEn}
+                      </span>
+                      <span className="block leading-tight" style={{ fontSize: 10, color: "#767676", marginTop: 2 }}>
+                        {lang === "ja" ? s.descJa : s.descEn}
+                      </span>
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           {/* Nav links */}
