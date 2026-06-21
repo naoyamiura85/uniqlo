@@ -31,9 +31,9 @@ export default function Header() {
           <Image
             src="/images/logo-uniqlo.png"
             alt="UNIQLO"
-            width={80}
-            height={36}
-            style={{ height: 36, width: "auto" }}
+            width={63}
+            height={44}
+            style={{ height: 44, width: "auto" }}
             priority
           />
         </Link>
@@ -147,36 +147,72 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ── Mobile header ── */}
-      <div className="md:hidden flex items-center h-12 px-4 gap-3">
-        <Link href="/" aria-label="UNIQLO ホーム">
-          <Image
-            src="/images/logo-uniqlo.png"
-            alt="UNIQLO"
-            width={64}
-            height={28}
-            style={{ height: 28, width: "auto" }}
-            priority
-          />
-        </Link>
-        <div className="flex-1" />
-        <button className="p-2" aria-label="Search" style={{ color: "#FFFFFF" }}>
-          <Search size={20} />
-        </button>
-        <button className="p-2" aria-label={t.addToFavorite} style={{ color: "#FFFFFF" }}>
-          <Heart size={20} />
-        </button>
-        <button className="p-2" aria-label="Cart" style={{ color: "#FFFFFF" }}>
-          <ShoppingBag size={20} />
-        </button>
-        <button
-          className="p-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Menu"
-          style={{ color: "#FFFFFF" }}
-        >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+      {/* ── Mobile header ── 実機と同じ構造: 上段(ロゴ+検索+アイコン) / 下段(ナビタブ) */}
+      <div className="md:hidden">
+        {/* 上段: ロゴ + インライン検索 + アイコン */}
+        <div className="flex items-center h-14 px-4 gap-2.5">
+          <Link href="/" aria-label="UNIQLO ホーム" className="shrink-0">
+            <Image
+              src="/images/logo-uniqlo.png"
+              alt="UNIQLO"
+              width={54}
+              height={38}
+              style={{ height: 38, width: "auto" }}
+              priority
+            />
+          </Link>
+
+          {/* 検索バー（ヘッダーにインライン表示） */}
+          <label
+            className="flex items-center gap-2 flex-1 min-w-0 px-3.5 py-2 rounded-full cursor-text"
+            style={{ border: "1px solid rgba(255,255,255,0.5)", backgroundColor: "rgba(255,255,255,0.15)" }}
+          >
+            <Search size={15} style={{ color: "#FFFFFF", flexShrink: 0 }} />
+            <input
+              type="text"
+              placeholder={t.searchPlaceholder}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="outline-none flex-1 min-w-0 bg-transparent placeholder:text-white/60"
+              style={{ fontSize: 13, color: "#FFFFFF" }}
+            />
+          </label>
+
+          <button className="p-1.5 shrink-0" aria-label="Account" style={{ color: "#FFFFFF" }}>
+            <User size={22} />
+          </button>
+          <button className="p-1.5 shrink-0" aria-label="Cart" style={{ color: "#FFFFFF" }}>
+            <ShoppingBag size={22} />
+          </button>
+          <button
+            className="p-1.5 shrink-0"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Menu"
+            style={{ color: "#FFFFFF" }}
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+
+        {/* 下段: ナビタブ WOMEN / MEN / KIDS / BABY */}
+        <nav className="flex items-stretch h-10 px-1" aria-label="Main navigation">
+          {mainNavItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="relative flex-1 flex items-center justify-center transition-opacity hover:opacity-70"
+              style={{ fontSize: 13, fontWeight: 500, color: "#FFFFFF", letterSpacing: "0.02em" }}
+            >
+              {item.label}
+              {item.active && (
+                <span
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2"
+                  style={{ height: 2, width: 30, backgroundColor: "#FFFFFF" }}
+                />
+              )}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {/* ── Mobile menu drawer ── */}
