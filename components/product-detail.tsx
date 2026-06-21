@@ -301,7 +301,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
               style={{ borderTop: "1px solid #E0E0E0", borderBottom: "1px solid #E0E0E0" }}
             >
               <div className="flex items-start gap-3">
-                <Truck size={16} style={{ color: "#767676", marginTop: 1, shrink: 0 }} />
+                <Truck size={16} style={{ color: "#767676", marginTop: 1, flexShrink: 0 }} />
                 <div>
                   <p className="font-medium" style={{ fontSize: 12, color: "#222222" }}>{t.pdpDelivery}</p>
                   <p style={{ fontSize: 11, color: "#767676" }}>
