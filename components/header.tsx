@@ -3,11 +3,21 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Search, User, ShoppingBag, Heart, Menu, X, ChevronRight } from "lucide-react"
+import { Search, User, ShoppingBag, Heart, Menu, X, ChevronRight, Sparkles, Headset, Ruler, Gift } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import { useAssistant } from "@/lib/assistant-context"
+import { scenarios, type AssistantIcon } from "@/lib/assistant-scenarios"
+
+const MODE_ICONS: Record<AssistantIcon, typeof Headset> = {
+  concierge: Headset,
+  styling: Sparkles,
+  ruler: Ruler,
+  gift: Gift,
+}
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage()
+  const { openWithMode } = useAssistant()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
@@ -31,9 +41,9 @@ export default function Header() {
           <Image
             src="/images/logo-uniqlo.png"
             alt="UNIQLO"
-            width={80}
-            height={36}
-            style={{ height: 36, width: "auto" }}
+            width={63}
+            height={44}
+            style={{ height: 44, width: "auto" }}
             priority
           />
         </Link>
@@ -147,36 +157,72 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ── Mobile header ── */}
-      <div className="md:hidden flex items-center h-12 px-4 gap-3">
-        <Link href="/" aria-label="UNIQLO ホーム">
-          <Image
-            src="/images/logo-uniqlo.png"
-            alt="UNIQLO"
-            width={64}
-            height={28}
-            style={{ height: 28, width: "auto" }}
-            priority
-          />
-        </Link>
-        <div className="flex-1" />
-        <button className="p-2" aria-label="Search" style={{ color: "#FFFFFF" }}>
-          <Search size={20} />
-        </button>
-        <button className="p-2" aria-label={t.addToFavorite} style={{ color: "#FFFFFF" }}>
-          <Heart size={20} />
-        </button>
-        <button className="p-2" aria-label="Cart" style={{ color: "#FFFFFF" }}>
-          <ShoppingBag size={20} />
-        </button>
-        <button
-          className="p-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Menu"
-          style={{ color: "#FFFFFF" }}
-        >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+      {/* ── Mobile header ── 実機と同じ構造: 上段(ロゴ+検索+アイコン) / 下段(ナビタブ) */}
+      <div className="md:hidden">
+        {/* 上段: ロゴ + インライン検索 + アイコン */}
+        <div className="flex items-center h-14 px-4 gap-2.5">
+          <Link href="/" aria-label="UNIQLO ホーム" className="shrink-0">
+            <Image
+              src="/images/logo-uniqlo.png"
+              alt="UNIQLO"
+              width={54}
+              height={38}
+              style={{ height: 38, width: "auto" }}
+              priority
+            />
+          </Link>
+
+          {/* 検索バー（ヘッダーにインライン表示） */}
+          <label
+            className="flex items-center gap-2 flex-1 min-w-0 px-3.5 py-2 rounded-full cursor-text"
+            style={{ border: "1px solid rgba(255,255,255,0.5)", backgroundColor: "rgba(255,255,255,0.15)" }}
+          >
+            <Search size={15} style={{ color: "#FFFFFF", flexShrink: 0 }} />
+            <input
+              type="text"
+              placeholder={t.searchPlaceholder}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="outline-none flex-1 min-w-0 bg-transparent placeholder:text-white/60"
+              style={{ fontSize: 13, color: "#FFFFFF" }}
+            />
+          </label>
+
+          <button className="p-1.5 shrink-0" aria-label="Account" style={{ color: "#FFFFFF" }}>
+            <User size={22} />
+          </button>
+          <button className="p-1.5 shrink-0" aria-label="Cart" style={{ color: "#FFFFFF" }}>
+            <ShoppingBag size={22} />
+          </button>
+          <button
+            className="p-1.5 shrink-0"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Menu"
+            style={{ color: "#FFFFFF" }}
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+
+        {/* 下段: ナビタブ WOMEN / MEN / KIDS / BABY */}
+        <nav className="flex items-stretch h-10 px-1" aria-label="Main navigation">
+          {mainNavItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="relative flex-1 flex items-center justify-center transition-opacity hover:opacity-70"
+              style={{ fontSize: 13, fontWeight: 500, color: "#FFFFFF", letterSpacing: "0.02em" }}
+            >
+              {item.label}
+              {item.active && (
+                <span
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2"
+                  style={{ height: 2, width: 30, backgroundColor: "#FFFFFF" }}
+                />
+              )}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {/* ── Mobile menu drawer ── */}
@@ -227,6 +273,42 @@ export default function Header() {
             >
               English
             </button>
+          </div>
+
+          {/* AI 接客モード切替 */}
+          <div className="px-4 pt-3 pb-3 mt-1" style={{ borderTop: "1px solid #EEEEEE" }}>
+            <div className="flex items-center gap-1.5 mb-2">
+              <Sparkles size={14} style={{ color: "var(--uniqlo-red)" }} />
+              <p className="font-bold" style={{ fontSize: 12, color: "#222222" }}>
+                {lang === "ja" ? "AI接客モード" : "AI Assistant Mode"}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {scenarios.map((s) => {
+                const Icon = MODE_ICONS[s.icon]
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      openWithMode(s.id)
+                      setMobileMenuOpen(false)
+                    }}
+                    className="flex items-start gap-2 rounded-lg p-2.5 text-left transition-colors hover:bg-gray-50"
+                    style={{ border: "1px solid #E0E0E0" }}
+                  >
+                    <Icon size={16} style={{ color: "var(--uniqlo-red)", marginTop: 1, flexShrink: 0 }} />
+                    <span>
+                      <span className="block font-medium leading-tight" style={{ fontSize: 12, color: "#222222" }}>
+                        {lang === "ja" ? s.labelJa : s.labelEn}
+                      </span>
+                      <span className="block leading-tight" style={{ fontSize: 10, color: "#767676", marginTop: 2 }}>
+                        {lang === "ja" ? s.descJa : s.descEn}
+                      </span>
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           {/* Nav links */}

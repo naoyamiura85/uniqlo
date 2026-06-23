@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    # typecheck / lint / build を並列ジョブとして実行し、
+    # どのジョブが落ちたか個別に分かるようにする
+    name: ${{ matrix.task }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      # 1 つ落ちても他のジョブを止めず、全ての結果を確認できるようにする
+      fail-fast: false
+      matrix:
+        task: [typecheck, lint, build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # pnpm/action-setup は packageManager の version 指定と競合するため、
+      # corepack で package.json の packageManager フィールドのバージョンを使う
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ${{ matrix.task }}
+        run: pnpm ${{ matrix.task }}
